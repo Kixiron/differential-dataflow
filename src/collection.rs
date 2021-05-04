@@ -37,8 +37,8 @@ use hashable::Hashable;
 /// parameter is the type of data in your collection, for example `String`, or `(u32, Vec<Option<()>>)`.
 /// The `R` parameter represents the types of changes that the data undergo, and is most commonly (and
 /// defaults to) `isize`, representing changes to the occurrence count of each record.
-#[derive(Clone)]
-pub struct Collection<G: Scope, D, R: Semigroup = isize> {
+#[derive(Debug, Clone)]
+pub struct Collection<G: Scope, D, R = isize> {
     /// The underlying timely dataflow stream.
     ///
     /// This field is exposed to support direct timely dataflow manipulation when required, but it is
@@ -56,6 +56,7 @@ impl<G: Scope, D: Data, R: Semigroup> Collection<G, D, R> where G::Timestamp: Da
     pub fn new(stream: Stream<G, (D, G::Timestamp, R)>) -> Collection<G, D, R> {
         Collection { inner: stream }
     }
+
     /// Creates a new collection by applying the supplied function to each input element.
     ///
     /// # Examples

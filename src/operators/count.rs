@@ -95,19 +95,24 @@ where
                         trace_cursor.seek_key(&trace_storage, key);
                         if trace_cursor.get_key(&trace_storage) == Some(key) {
                             trace_cursor.map_times(&trace_storage, |_, diff| {
-                                count.as_mut().map(|c| *c += diff);
+                                if let Some(count) = count.as_mut() {
+                                    *count += diff;
+                                }
+
                                 if count.is_none() { count = Some(diff.clone()); }
                             });
                         }
 
                         batch_cursor.map_times(&batch, |time, diff| {
 
-                            if let Some(count) = count.as_ref() {
+                            if let Some(count) = count.as_mut() {
                                 if !count.is_zero() {
                                     session.give(((key.clone(), count.clone()), time.clone(), -1));
                                 }
+
+                                *count += diff;
                             }
-                            count.as_mut().map(|c| *c += diff);
+
                             if count.is_none() { count = Some(diff.clone()); }
                             if let Some(count) = count.as_ref() {
                                 if !count.is_zero() {

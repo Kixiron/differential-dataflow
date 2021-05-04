@@ -156,34 +156,34 @@ impl<G: TimelyInput> Input for G where <G as ScopeParent>::Timestamp: Lattice {
 /// fn main() {
 ///     ::timely::execute(Config::thread(), |worker| {
 ///
-///			let (mut handle, probe) = worker.dataflow(|scope| {
-///				// create input handle and collection.
-///				let (handle, data) = scope.new_collection_from(0 .. 10);
-///         	let probe = data.map(|x| x * 2)
-///				            	.inspect(|x| println!("{:?}", x))
-///				            	.probe();
-///				(handle, probe)
-///     	});
+///         let (mut handle, probe) = worker.dataflow(|scope| {
+///             // create input handle and collection.
+///             let (handle, data) = scope.new_collection_from(0 .. 10);
+///                   let probe = data.map(|x| x * 2)
+///                       .inspect(|x| println!("{:?}", x))
+///                       .probe();
+///             (handle, probe)
+///         });
 ///
-///			handle.insert(3);
-///			handle.advance_to(1);
-///			handle.insert(5);
-///			handle.advance_to(2);
-///			handle.flush();
+///         handle.insert(3);
+///         handle.advance_to(1);
+///         handle.insert(5);
+///         handle.advance_to(2);
+///         handle.flush();
 ///
-///			while probe.less_than(handle.time()) {
-///				worker.step();
-///			}
+///         while probe.less_than(handle.time()) {
+///             worker.step();
+///         }
 ///
-///			handle.remove(5);
-///			handle.advance_to(3);
-///			handle.flush();
+///         handle.remove(5);
+///         handle.advance_to(3);
+///         handle.flush();
 ///
-///			while probe.less_than(handle.time()) {
-///				worker.step();
-///			}
+///         while probe.less_than(handle.time()) {
+///             worker.step();
+///         }
 ///
-///		}).unwrap();
+///     }).unwrap();
 /// }
 /// ```
 pub struct InputSession<T: Timestamp+Clone, D: Data, R: Semigroup> {

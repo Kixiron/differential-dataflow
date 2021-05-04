@@ -410,7 +410,7 @@ where
                 let frontier = [
                     capability.as_ref().map(|c| c.time().clone()),
                     input1.frontier().frontier().get(0).cloned(),
-                ].into_iter().cloned().filter_map(|t| t).min();
+                ].iter().cloned().filter_map(|t| t).min();
 
                 if let Some(frontier) = frontier {
                     trace.as_mut().map(|t| t.advance_by(AntichainRef::new(&[frontier])));
@@ -669,14 +669,14 @@ where
                         input_frontier.extend(input.frontier().frontier().iter().cloned());
                     }
 
-                    if let Some(mut fuel) = effort.clone() {
+                    if let Some(mut fuel) = effort {
                         writer.exert(&mut fuel);
                     }
                 }
             })
         };
 
-        Arranged { stream: stream, trace: reader.unwrap() }
+        Arranged { stream, trace: reader.unwrap() }
     }
 }
 

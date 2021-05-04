@@ -235,7 +235,7 @@ where
                                 let mut to_process = HashMap::new();
                                 while priority_queue.peek().map(|std::cmp::Reverse((t,_k,_v))| !upper.less_equal(t)).unwrap_or(false) {
                                     let std::cmp::Reverse((time, key, val)) = priority_queue.pop().expect("Priority queue just ensured non-empty");
-                                    to_process.entry(key).or_insert(Vec::new()).push((time, std::cmp::Reverse(val)));
+                                    to_process.entry(key).or_insert_with(Vec::new).push((time, std::cmp::Reverse(val)));
                                 }
                                 // Reduce the allocation behind the priority queue if it is presently excessive.
                                 // A factor of four is used to avoid repeated doubling and shrinking.
@@ -335,13 +335,13 @@ where
                     reader_local.distinguish_since(input_frontier.borrow());
                 }
 
-                if let Some(mut fuel) = effort.clone() {
+                if let Some(mut fuel) = effort {
                     writer.exert(&mut fuel);
                 }
             }
         })
     };
 
-    Arranged { stream: stream, trace: reader.unwrap() }
+    Arranged { stream, trace: reader.unwrap() }
 
 }
